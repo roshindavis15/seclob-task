@@ -31,3 +31,8 @@ export const loginValidation = [
 export const categoryValidation = [
   body('name').notEmpty().withMessage('Category name is required'),
 ];
+
+export const subCategoryValidation = [
+  body('name').notEmpty().withMessage('Subcategory name is required'),
+  body('categoryId').notEmpty().withMessage('Category ID is required').isMongoId().withMessage('Invalid category ID'),
+];
