@@ -3,6 +3,7 @@ import Category from '../models/Category';
 import AppError from '../utils/AppError';
 import SubCategory from '../models/SubCategory';
 import Product from '../models/Product';
+import User from '../models/User';
 
 export const addCategory = async (
   req: Request,
@@ -93,3 +94,66 @@ export const addProduct = async (req: Request, res: Response, next: NextFunction
     next(err);
   }
 };
+
+export const getProductDetails = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { id } = req.params;
+   console.log("id:",id)
+    const product = await Product.findById(id)
+      .populate({
+        path: 'subCategory',
+        populate: {
+          path: 'category', 
+          select: 'name',
+        },
+        select: 'name',
+      });
+
+    if (!product) {
+      throw new AppError('Product not found', 404);
+    }
+
+    res.status(200).json({
+      success: true,
+      product,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const editProduct = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { id } = req.params;
+    const { title, description, subCategoryId, variants } = req.body;
+
+    const product = await Product.findById(id);
+    if (!product) {
+      throw new AppError('Product not found', 404);
+    }
+
+    
+    const files = req.files as Express.Multer.File[];
+    const images = files?.map(file => file.filename);
+
+    
+    if (subCategoryId) {
+      const subCategoryExists = await SubCategory.findById(subCategoryId);
+      if (!subCategoryExists) throw new AppError('Subcategory not found', 404);
+      product.subCategory = subCategoryId;
+    }
+
+   
+    if (title) product.title = title;
+    if (description) product.description = description;
+    if (variants) product.variants = JSON.parse(variants);
+    if (images?.length > 0) product.images = images;
+
+    await product.save();
+
+    res.status(200).json({ success: true, product });
+  } catch (err) {
+    next(err);
+  }
+};
+

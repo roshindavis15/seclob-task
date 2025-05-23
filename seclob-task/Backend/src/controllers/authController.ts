@@ -11,7 +11,7 @@ export const registerUser = async (
   res: Response,
   next: NextFunction
 ): Promise<void> => {
-    
+    console.log(req.body,'body')
   const { name, email, password } = req.body;
 
   try {
@@ -19,7 +19,6 @@ export const registerUser = async (
     if (userExists) {
       throw new AppError('User already exists', 400);
     }
-
    
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await User.create({ name, email, password: hashedPassword });
@@ -27,7 +26,9 @@ export const registerUser = async (
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET!, {
       expiresIn: '7d',
     });
+  
 
+  
     res.status(201).json({
       _id: user._id,
       username: user.name,
