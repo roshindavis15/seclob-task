@@ -46,23 +46,12 @@ This is a backend API built using **Node.js**, **Express**, **TypeScript**, and 
    npm install
    ```
 
-3. **Configure environment variables**
-
-   Create a `.env` file and add:
-
-   ```
-PORT=5000
-MONGO_URI=mongodb+srv://roshindavis15:4X7bLxFJU9NObL8F@cluster0.xdh3oip.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
-JWT_SECRET=roshinsecret
-CLOUDINARY_API_SECRET=qaEsd1Yfn0PwFWqCzxd4UvxK8YE
-CLOUDINARY_API_KEY=967962974527394
-CLOUDINARY_CLOUD_NAME=dvtkppsqv
 
 
 
    ```
 
-4. **Run the server**
+3. **Run the server**
 
    * For development:
 
